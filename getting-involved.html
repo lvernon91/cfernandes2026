@@ -3,11 +3,23 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Getting Involved | Cristina Bairos Fernandes</title>
+  <title>Get Involved | Cristina Bairos Fernandes</title>
   <meta name="description" content="Support Cristina Bairos Fernandes: donate, host a lawn sign, volunteer, or share your perspective on public education.">
   <link rel="icon" href="https://static.wixstatic.com/media/94a08f_8d7bc930679843a6bdc421e61376ba02~mv2.png">
-  <link rel="stylesheet" href="styles.css?v=15">
-  <script src="script.js?v=4" defer></script>
+  <link rel="stylesheet" href="styles.css?v=18">
+  <script src="script.js?v=5" defer></script>
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Cristina Bairos Fernandes">
+  <meta property="og:title" content="Get Involved | Cristina Bairos Fernandes">
+  <meta property="og:description" content="Support Cristina Bairos Fernandes: donate, host a lawn sign, volunteer, or share your perspective on public education.">
+  <meta property="og:image" content="https://www.cfernandes.ca/assets/social-preview.png">
+  <meta property="og:image:width" content="648">
+  <meta property="og:image:height" content="366">
+  <meta property="og:image:alt" content="Cristina Bairos Fernandes — She’s Listening. She’s Taking Action. WRDSB Trustee in Waterloo and Wilmot.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Get Involved | Cristina Bairos Fernandes">
+  <meta name="twitter:description" content="Support Cristina Bairos Fernandes: donate, host a lawn sign, volunteer, or share your perspective on public education.">
+  <meta name="twitter:image" content="https://www.cfernandes.ca/assets/social-preview.png">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -18,14 +30,14 @@
       <a href="about-cris.html">About Cristina</a>
       <a href="priorities.html">Priorities</a>
       <a href="record-of-action.html">Record of Action</a>
-      <a href="getting-involved.html" aria-current="page">Getting Involved</a>
+      <a href="getting-involved.html" aria-current="page">Get Involved</a>
       <a href="#contact">Contact</a>
     </nav></details>
   </div>
 </header>
 <main id="main">
   <section class="involved-intro section-space"><div class="wrap">
-    <h1>Getting Involved</h1>
+    <h1>Get Involved</h1>
     <p>Campaigns are powered by people who are willing to show up in different ways.</p>
     <p>Whether that means donating, hosting a lawn sign, volunteering, becoming informed, or sharing your feedback, every contribution helps strengthen important conversations.</p>
     <p>Thank you for taking a moment to explore ways to support.</p>
@@ -45,7 +57,7 @@
         <li>Contributors must be individuals who normally reside in Ontario.</li>
         <li>Corporate donations cannot be accepted. Individuals associated with them may contribute personally if eligible.</li>
       </ul>
-      <a class="button" href="mailto:cristina.BF@pm.me?subject=Cristina%20for%20WRDSB%20Trustee%20Financial%20Contribution">I Want To Donate</a>
+      <button class="button" type="button" id="donation-button" aria-haspopup="dialog" aria-controls="donation-dialog">I Want To Donate</button>
       <p class="involved-note">Financial contributions can be sent via e-transfer to <a href="mailto:cristina.BF@pm.me">cristina.BF@pm.me</a>.</p>
     </div>
   </section>
@@ -80,6 +92,11 @@
     <img class="involved-image involved-connect-image" src="https://static.wixstatic.com/media/94a08f_4f68d71fb5b54f3e97832bec8ce9deb9~mv2.jpg" alt="" width="1126" height="731" loading="lazy">
   </section>
 </main>
+<dialog class="donation-dialog" id="donation-dialog" aria-labelledby="donation-dialog-title" aria-describedby="donation-dialog-description">
+  <form method="dialog" class="donation-dialog-close-form"><button type="submit" class="donation-dialog-close" aria-label="Close donation details" autofocus>×</button></form>
+  <h2 id="donation-dialog-title">Your Donation<br>Is Much Appreciated</h2>
+  <p id="donation-dialog-description">Financial contributions can be sent via<br>e-transfer to <a href="mailto:cristina.BF@pm.me?subject=Cristina%20for%20WRDSB%20Trustee%20Financial%20Contribution">cristina.BF@pm.me</a></p>
+</dialog>
 <footer>
   <div class="contact-section section-space" id="contact"><div class="contact-grid wrap">
     <section class="voting"><p class="eyebrow">Make Your Voice Count</p><h2>Vote October 26</h2><p>The future of our schools is decided by those who show up.</p><a class="button" href="https://www.waterloo.ca/council-and-committees/municipal-elections/vote-in-the-municipal-election">Waterloo Voting Info</a><a class="button" href="https://www.wilmot.ca/township-office/elections/">Wilmot Voting Info</a></section>

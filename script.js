@@ -69,3 +69,20 @@ header.addEventListener('focusin', () => header.classList.remove('header-hidden'
 navigation.addEventListener('toggle', () => {
   if (!desktopNavigation.matches && navigation.open) header.classList.remove('header-hidden');
 });
+
+
+// Donation details open only from the Get Involved donation button.
+const donationButton = document.querySelector('#donation-button');
+const donationDialog = document.querySelector('#donation-dialog');
+if (donationButton && donationDialog) {
+  donationButton.addEventListener('click', () => donationDialog.showModal());
+  donationDialog.addEventListener('click', event => {
+    const bounds = donationDialog.getBoundingClientRect();
+    if (event.target === donationDialog &&
+        (event.clientX < bounds.left || event.clientX > bounds.right ||
+         event.clientY < bounds.top || event.clientY > bounds.bottom)) {
+      donationDialog.close();
+    }
+  });
+  donationDialog.addEventListener('close', () => donationButton.focus({ preventScroll: true }));
+}
