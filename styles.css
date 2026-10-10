@@ -83,8 +83,7 @@
  .hero h1{font-family:Futura,'Century Gothic',Arial,sans-serif;font-size:clamp(1.2rem,4.5vw,1.7rem);line-height:1.35;max-width:100%;margin-bottom:20px}
  .hero-copy>p{font-family:Caslon,Georgia,serif;font-size:clamp(1rem,4vw,1.25rem);line-height:1.4;width:57%;margin-top:0}
  .hero-inner .portrait{position:absolute;z-index:0;right:-9%;bottom:0;width:56%;height:calc(100% - 12px);max-height:none;object-fit:contain;object-position:right bottom;margin:0}
- .hero-copy>.button{background:transparent;color:#8b8edb;border:0;padding:0;margin-top:16px;width:60%;justify-content:flex-start;text-align:left;font-size:1rem}
- .hero-copy>.button:after{content:'›';color:white;font-size:1.8rem;margin-left:6px}
+ .hero-copy>.button{margin-top:16px;width:60%;font-size:1rem}
  .hero-vote-desktop{display:none}
  .hero-vote-mobile{display:block;background:var(--navy);color:var(--cream);padding:26px 0 30px}
  .hero-vote-mobile .vote-date{font-family:Caslon,Georgia,serif;font-size:1.5rem;line-height:1.2;margin:0}
