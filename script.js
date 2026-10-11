@@ -21,32 +21,22 @@ function validateInterests() {
 }
 interests.forEach(input => input.addEventListener('change', validateInterests));
 validateInterests();
-// Paste the public Formspree endpoint here once the recipient is configured.
-// Until configured, the existing email-app flow remains available.
-const contactFormEndpoint = '';
+// Web3Forms access keys are public form identifiers. Recipient settings live in Web3Forms.
 const formStatus = document.querySelector('#form-status');
 const submitButton = form.querySelector('[type="submit"]');
-const directSubmissionEnabled = /^https:\/\/formspree\.io\/f\/[a-zA-Z0-9]+$/.test(contactFormEndpoint);
 let submissionPending = false;
-if (directSubmissionEnabled) {
-  form.action = contactFormEndpoint;
-  form.method = 'POST';
-  submitButton.textContent = 'Send message';
-  form.querySelector('.form-note').textContent = 'Send your message directly to Cristina.';
-}
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
   if (submissionPending) return;
   validateInterests();
   if (!form.reportValidity()) return;
   const data = new FormData(form);
-  if (!directSubmissionEnabled) {
-    const body = `Name: ${data.get('firstName')} ${data.get('lastName')}\nEmail: ${data.get('email')}\nPhone: ${data.get('phone') || 'Not provided'}\nI'm looking to: ${data.getAll('interest').join(', ')}\n\n${data.get('message')}`;
-    window.location.href = `mailto:Cristina.BF@pm.me?subject=${encodeURIComponent('Connect & Get Involved')}&body=${encodeURIComponent(body)}`;
-    formStatus.textContent = 'Your email app has been requested. If it does not open, email Cristina.BF@pm.me directly. Your message has not been sent by this website.';
-    return;
-  }
-  data.set('_subject', 'Connect & Get Involved — Cristina’s campaign website');
+  // Preserve every selected checkbox; Object.fromEntries alone would keep only the last.
+  const payload = Object.fromEntries(data);
+  payload.interest = data.getAll('interest').join(', ');
+  payload.name = `${data.get('firstName').trim()} ${data.get('lastName').trim()}`;
+  payload.botcheck = Boolean(data.get('botcheck'));
+  if (payload.botcheck) return;
   submissionPending = true;
   form.setAttribute('aria-busy', 'true');
   const controls = [...form.querySelectorAll('input, textarea, button')];
@@ -55,15 +45,16 @@ form.addEventListener('submit', async (event) => {
   submitButton.textContent = 'Sending…';
   formStatus.textContent = 'Sending your message…';
   try {
-    const response = await fetch(contactFormEndpoint, {
+    const response = await fetch(form.action, {
       method: 'POST',
-      body: data,
-      headers: { Accept: 'application/json' }
+      body: JSON.stringify(payload),
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' }
     });
-    if (!response.ok) throw new Error('Submission was not accepted.');
+    const result = await response.json();
+    if (!response.ok || result.success !== true) throw new Error('Submission was not accepted.');
     form.reset();
     validateInterests();
-    formStatus.textContent = 'Thank you! Your message has been submitted to Cristina.';
+    formStatus.textContent = 'Thank you! Your message has been submitted.';
   } catch (error) {
     formStatus.textContent = 'We could not confirm your submission. Your details are still here. Please try again or email Cristina.BF@pm.me directly.';
   } finally {
@@ -128,4 +119,18 @@ if (donationButton && donationDialog) {
     }
   });
   donationDialog.addEventListener('close', () => donationButton.focus({ preventScroll: true }));
+}
+
+// Keep the mobile portrait section compact without duplicating the audio player.
+const heroAudio = document.querySelector('.hero-audio');
+const mobileAudioSlot = document.querySelector('.hero-audio-mobile-slot');
+if (heroAudio && mobileAudioSlot) {
+  const desktopAudioParent = heroAudio.parentElement;
+  const mobileHero = window.matchMedia('(max-width: 700px)');
+  function positionHeroAudio() {
+    const target = mobileHero.matches ? mobileAudioSlot : desktopAudioParent;
+    if (heroAudio.parentElement !== target) target.appendChild(heroAudio);
+  }
+  positionHeroAudio();
+  mobileHero.addEventListener('change', positionHeroAudio);
 }
