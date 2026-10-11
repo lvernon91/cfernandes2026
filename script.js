@@ -1,5 +1,5 @@
 const navigation = document.querySelector('.navigation');
-const desktopNavigation = window.matchMedia('(min-width: 1001px)');
+const desktopNavigation = window.matchMedia('(min-width: 1101px)');
 function syncNavigation() {
   navigation.open = desktopNavigation.matches;
 }
@@ -21,14 +21,57 @@ function validateInterests() {
 }
 interests.forEach(input => input.addEventListener('change', validateInterests));
 validateInterests();
-form.addEventListener('submit', (event) => {
+// Paste the public Formspree endpoint here once the recipient is configured.
+// Until configured, the existing email-app flow remains available.
+const contactFormEndpoint = '';
+const formStatus = document.querySelector('#form-status');
+const submitButton = form.querySelector('[type="submit"]');
+const directSubmissionEnabled = /^https:\/\/formspree\.io\/f\/[a-zA-Z0-9]+$/.test(contactFormEndpoint);
+let submissionPending = false;
+if (directSubmissionEnabled) {
+  form.action = contactFormEndpoint;
+  form.method = 'POST';
+  submitButton.textContent = 'Send message';
+  form.querySelector('.form-note').textContent = 'Send your message directly to Cristina.';
+}
+form.addEventListener('submit', async (event) => {
   event.preventDefault();
+  if (submissionPending) return;
   validateInterests();
   if (!form.reportValidity()) return;
   const data = new FormData(form);
-  const body = `Name: ${data.get('firstName')} ${data.get('lastName')}\nEmail: ${data.get('email')}\nPhone: ${data.get('phone') || 'Not provided'}\nI'm looking to: ${data.getAll('interest').join(', ')}\n\n${data.get('message')}`;
-  window.location.href = `mailto:Cristina.BF@pm.me?subject=${encodeURIComponent('Connect & Get Involved')}&body=${encodeURIComponent(body)}`;
-  document.querySelector('#form-status').textContent = 'Your email app has been requested. If it does not open, email Cristina.BF@pm.me directly. Your message has not been sent by this website.';
+  if (!directSubmissionEnabled) {
+    const body = `Name: ${data.get('firstName')} ${data.get('lastName')}\nEmail: ${data.get('email')}\nPhone: ${data.get('phone') || 'Not provided'}\nI'm looking to: ${data.getAll('interest').join(', ')}\n\n${data.get('message')}`;
+    window.location.href = `mailto:Cristina.BF@pm.me?subject=${encodeURIComponent('Connect & Get Involved')}&body=${encodeURIComponent(body)}`;
+    formStatus.textContent = 'Your email app has been requested. If it does not open, email Cristina.BF@pm.me directly. Your message has not been sent by this website.';
+    return;
+  }
+  data.set('_subject', 'Connect & Get Involved — Cristina’s campaign website');
+  submissionPending = true;
+  form.setAttribute('aria-busy', 'true');
+  const controls = [...form.querySelectorAll('input, textarea, button')];
+  const disabledStates = controls.map(control => control.disabled);
+  controls.forEach(control => { control.disabled = true; });
+  submitButton.textContent = 'Sending…';
+  formStatus.textContent = 'Sending your message…';
+  try {
+    const response = await fetch(contactFormEndpoint, {
+      method: 'POST',
+      body: data,
+      headers: { Accept: 'application/json' }
+    });
+    if (!response.ok) throw new Error('Submission was not accepted.');
+    form.reset();
+    validateInterests();
+    formStatus.textContent = 'Thank you! Your message has been submitted to Cristina.';
+  } catch (error) {
+    formStatus.textContent = 'We could not confirm your submission. Your details are still here. Please try again or email Cristina.BF@pm.me directly.';
+  } finally {
+    controls.forEach((control, index) => { control.disabled = disabledStates[index]; });
+    submitButton.textContent = 'Send message';
+    form.removeAttribute('aria-busy');
+    submissionPending = false;
+  }
 });
 
 // Carry the selected way to help into the contact form.
